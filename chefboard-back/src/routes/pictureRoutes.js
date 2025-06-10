@@ -1,11 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Picture = require('../models/Picture');
-const genericController = require('../controllers/genericController');
+const Review = require("../models/Review");
+const genericController = require("../controllers/genericController");
+const authMiddleware = require("../middleware/authMiddleware");
 
-router.post('/', genericController.createItem(Picture));
-router.get('/', genericController.getItems(Picture));
-router.put('/:id', genericController.updateItem(Picture));
-router.delete('/:id', genericController.deleteItem(Picture));
+router.post("/", authMiddleware, genericController.createItem(Review));
+router.get("/", authMiddleware, genericController.getItems(Review));
+router.put("/:id", authMiddleware, genericController.updateItem(Review));
+router.delete("/:id", authMiddleware, genericController.deleteItem(Review));
 
 module.exports = router;

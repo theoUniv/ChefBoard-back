@@ -4,7 +4,7 @@ const Review = require("../models/Review");
 const genericController = require("../controllers/genericController");
 const authMiddleware = require("../middleware/authMiddleware"); 
 
-router.post("/", authMiddleware, genericController.createItem(Review));
+router.post("/create", authMiddleware, genericController.createItem(Review));
 router.get("/", authMiddleware, genericController.getItems(Review));
 router.put("/:id", authMiddleware, genericController.updateItem(Review));
 router.delete("/:id", authMiddleware, genericController.deleteItem(Review));

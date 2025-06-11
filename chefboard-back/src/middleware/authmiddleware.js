@@ -1,5 +1,8 @@
 const jwt = require("jsonwebtoken");
 
+const SECRET = process.env.JWT_SECRET || "Inconnu";
+
+
 const authMiddleware = (req, res, next) => {
     const token = req.headers["authorization"];
 
@@ -8,7 +11,7 @@ const authMiddleware = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token.replace("Bearer ", ""), "votre_secret");
+        const decoded = jwt.verify(token.replace("Bearer ", ""), SECRET);
         req.user = decoded;
         next();
     } catch (error) {

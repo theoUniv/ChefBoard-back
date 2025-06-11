@@ -10,7 +10,8 @@ const roleMiddleware = require("../middleware/rolemiddleware");
 // - chef -> créer et voir
 // - user -> voir seulement
 
-router.post("/", authMiddleware, roleMiddleware(["admin", "chef"]), genericController.createItem(Company));
+// routes/companies.js
+router.post("/create", authMiddleware, roleMiddleware(["admin", "chef"]), genericController.createItem(Company));
 router.get("/", authMiddleware, roleMiddleware(["admin", "chef", "user"]), genericController.getItems(Company));
 router.put("/:id", authMiddleware, roleMiddleware(["admin"]), genericController.updateItem(Company));
 router.delete("/:id", authMiddleware, roleMiddleware(["admin"]), genericController.deleteItem(Company));

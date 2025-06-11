@@ -12,7 +12,7 @@ app.use('/api', routes);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({ error: 'Une couille dans le potage' });
+    res.status(500).json({ error: 'Erreur interne serveur' });
 });
 
 module.exports = app;

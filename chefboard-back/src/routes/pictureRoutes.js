@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const Review = require("../models/Review");
+const Picture = require("../models/Picture");
 const genericController = require("../controllers/genericController");
 const authMiddleware = require("../middleware/authMiddleware");
 
-router.post("/", authMiddleware, genericController.createItem(Review));
-router.get("/", authMiddleware, genericController.getItems(Review));
-router.put("/:id", authMiddleware, genericController.updateItem(Review));
-router.delete("/:id", authMiddleware, genericController.deleteItem(Review));
+router.post("/create", authMiddleware, genericController.createItem(Picture));
+router.get("/", authMiddleware, genericController.getItems(Picture));
+router.put("/:id", authMiddleware, genericController.updateItem(Picture));
+router.delete("/:id", authMiddleware, genericController.deleteItem(Picture));
 
 module.exports = router;

@@ -6,7 +6,7 @@ const User = new mongoose.Schema({
     last_name: String,
     email: { type: String, unique: true },
     password: String,
-    role: { type: String, enum: ["user", "admin", "chef"], default: "user" },// Ajout du rôle    
+    role: { type: String, enum: ["user", "admin", "chef"], default: "user" },  
     birthdate: Date,
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }

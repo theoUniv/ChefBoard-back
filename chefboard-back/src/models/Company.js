@@ -1,13 +1,25 @@
 const mongoose = require('mongoose');
 
-const Company = new mongoose.Schema({
+const companySchema = new mongoose.Schema({
     name: String,
     email: String,
     adress: String,
     SIREN: String,
     schedules: String,
-    category: { type: String, enum: ["burger", "sushi", "bistro", "brasserie"], default: "brasserie" },  
-    
+    category: { type: String, enum: ["burger", "sushi", "bistro", "brasserie"], default: "brasserie" },
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            default: 'Point',
+        },
+        coordinates: {
+            type: [Number], // [longitude, latitude]
+            required: true,
+        }
+    }
 });
 
-module.exports = mongoose.model('Company', Company);
+companySchema.index({ location: '2dsphere' });
+
+module.exports = mongoose.model('Company', companySchema);

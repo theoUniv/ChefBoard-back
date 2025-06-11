@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Company = require("../models/Company");
 const genericController = require("../controllers/genericController");
+const companyController = require('../controllers/companyController');
 const authMiddleware = require("../middleware/authmiddleware");
 const roleMiddleware = require("../middleware/rolemiddleware");
 
@@ -27,7 +28,64 @@ const roleMiddleware = require("../middleware/rolemiddleware");
  *           type: string
  *           enum: [burger, sushi, bistro, brasserie]
  *           default: brasserie
+ *         location:
+ *           type: object
+ *           properties:
+ *             type:
+ *               type: string
+ *               enum: [Point]
+ *             coordinates:
+ *               type: array
+ *               items:
+ *                 type: number
+ *               description: [longitude, latitude]
  */
+
+/**
+ * @swagger
+ * /companies/nearby:
+ *   get:
+ *     summary: Récupérer les entreprises dans un rayon donné autour d'une position
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Companies
+ *     parameters:
+ *       - in: query
+ *         name: latitude
+ *         schema:
+ *           type: number
+ *         required: true
+ *         description: Latitude du point central
+ *       - in: query
+ *         name: longitude
+ *         schema:
+ *           type: number
+ *         required: true
+ *         description: Longitude du point central
+ *       - in: query
+ *         name: radius
+ *         schema:
+ *           type: number
+ *         required: true
+ *         description: Rayon en kilomètres
+ *     responses:
+ *       200:
+ *         description: Liste des entreprises dans le rayon spécifié
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Company'
+ *       400:
+ *         description: Paramètres invalides ou manquants
+ *       401:
+ *         description: Non autorisé
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get('/nearby', authMiddleware, roleMiddleware(['admin', 'chef', 'user']), companyController.getCompaniesNearby);
 
 /**
  * @swagger
@@ -46,11 +104,18 @@ const roleMiddleware = require("../middleware/rolemiddleware");
  *             $ref: '#/components/schemas/Company'
  *     responses:
  *       201:
- *         description: Entreprise créée
+ *         description: Entreprise créée avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Company'
+ *       400:
+ *         description: Données invalides
  *       401:
  *         description: Non autorisé
  */
 router.post("/create", authMiddleware, roleMiddleware(["admin", "chef"]), genericController.createItem(Company));
+
 
 /**
  * @swagger
@@ -136,3 +201,4 @@ router.put("/:id", authMiddleware, roleMiddleware(["admin"]), genericController.
 router.delete("/:id", authMiddleware, roleMiddleware(["admin"]), genericController.deleteItem(Company));
 
 module.exports = router;
+

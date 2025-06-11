@@ -13,6 +13,8 @@ const authController = require("./src/controllers/authController");
 
 const app = express();
 app.use(express.json());
+const setupSwagger = require('./swagger');
+
 
 mongoose
     .connect(process.env.MONGODB_URI, {
@@ -29,6 +31,8 @@ app.use("/api/posts", authController.verifyToken, postRoutes);
 app.use("/api/answers", authController.verifyToken, answerRoutes);
 app.use("/api/companies", authController.verifyToken, companyRoutes);
 app.use("/api/pictures", authController.verifyToken, pictureRoutes);
+
+setupSwagger(app);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {

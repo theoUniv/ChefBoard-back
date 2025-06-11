@@ -85,7 +85,7 @@ const roleMiddleware = require("../middleware/rolemiddleware");
  *       500:
  *         description: Erreur serveur
  */
-router.get('/nearby', authMiddleware, roleMiddleware(['admin', 'chef', 'user']), companyController.getCompaniesNearby);
+router.get('/nearby', companyController.getCompaniesNearby);
 
 /**
  * @swagger

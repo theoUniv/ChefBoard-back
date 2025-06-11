@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post");
 const genericController = require("../controllers/genericController");
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middleware/authmiddleware");
 
 router.post("/create", authMiddleware, genericController.createItem(Post));
 router.get("/", authMiddleware, genericController.getItems(Post));

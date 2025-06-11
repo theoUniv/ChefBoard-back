@@ -1,4 +1,6 @@
 const Company = require('../models/Company');
+const Review = require('../models/Review');
+const mongoose = require('mongoose');
 
 exports.getCompaniesNearby = async (req, res) => {
     const { latitude, longitude, radius } = req.query;
@@ -31,4 +33,23 @@ exports.getCompaniesNearby = async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: 'Erreur serveur', error: err.message });
     }
+};
+
+exports.updateCompanyScore = async function (companyId) {
+    if (!companyId) return;
+    console.log(typeof Review.aggregate); // Ça doit afficher "function"
+
+    const result = await Review.aggregate([
+        { $match: { id_company: new mongoose.Types.ObjectId(companyId) } },
+        {
+            $group: {
+                _id: '$id_company',
+                averageScore: { $avg: '$client_score' }
+            }
+        }
+    ]);
+
+    const average = result[0]?.averageScore || 0;
+
+    await Company.findByIdAndUpdate(companyId, { score: average });
 };

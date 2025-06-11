@@ -6,6 +6,7 @@ const companySchema = new mongoose.Schema({
     adress: String,
     SIREN: String,
     schedules: String,
+    id_owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     category: { type: String, enum: ["burger", "sushi", "bistro", "brasserie"], default: "brasserie" },
     location: {
         type: {

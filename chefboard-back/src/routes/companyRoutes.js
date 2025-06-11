@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Company = require("../models/Company");
 const genericController = require("../controllers/genericController");
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middleware/authmiddleware");
 const roleMiddleware = require("../middleware/rolemiddleware");
 
 // Règles de permissions :

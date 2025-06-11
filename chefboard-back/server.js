@@ -29,7 +29,7 @@ app.use("/api/users", authController.verifyToken, userRoutes);
 app.use("/api/reviews", authController.verifyToken, reviewRoutes);
 app.use("/api/posts", authController.verifyToken, postRoutes);
 app.use("/api/answers", authController.verifyToken, answerRoutes);
-app.use("/api/companies", authController.verifyToken, companyRoutes);
+app.use("/api/companies", companyRoutes);
 app.use("/api/pictures", authController.verifyToken, pictureRoutes);
 
 setupSwagger(app);

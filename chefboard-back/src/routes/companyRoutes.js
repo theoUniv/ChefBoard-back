@@ -140,7 +140,7 @@ router.post("/create", authMiddleware, roleMiddleware(["admin", "chef"]), generi
  *       500:
  *         description: Erreur serveur
  */
-router.get("/", authMiddleware, async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         // Récupérer toutes les entreprises et peupler l'objet logo, sans l'email
         const companies = await Company.find().select("-email").populate("logo");

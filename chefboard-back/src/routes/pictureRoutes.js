@@ -3,6 +3,21 @@ const router = express.Router();
 const Picture = require("../models/Picture");
 const genericController = require("../controllers/genericController");
 const authMiddleware = require("../middleware/authmiddleware");
+const multer = require('multer');
+const path = require('path');
+
+// ────────────────────────────────
+// ⚙️ MULTER CONFIGURATION POUR UPLOAD D'IMAGE
+// ────────────────────────────────
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage });
 
 /**
  * @swagger
@@ -23,7 +38,7 @@ const authMiddleware = require("../middleware/authmiddleware");
  * @swagger
  * /pictures/create:
  *   post:
- *     summary: Créer une image
+ *     summary: Upload d'une image avec description
  *     security:
  *       - bearerAuth: []
  *     tags:
@@ -31,16 +46,46 @@ const authMiddleware = require("../middleware/authmiddleware");
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Picture'
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Fichier image à uploader
+ *               description:
+ *                 type: string
+ *                 description: Description de l'image
  *     responses:
  *       201:
- *         description: Image créée
+ *         description: Image créée avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Picture'
+ *       400:
+ *         description: Requête invalide
  *       401:
  *         description: Non autorisé
+ *       500:
+ *         description: Erreur serveur
  */
-router.post("/create", authMiddleware, genericController.createItem(Picture));
+router.post("/create", authMiddleware, upload.single('image'),
+    async (req, res) => {
+        try {
+            const picture = new Picture({
+                path: req.file.path,
+                description: req.body.description
+            });
+            await picture.save();
+            res.status(201).json(picture);
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Erreur serveur' });
+        }
+    }
+);
 
 /**
  * @swagger

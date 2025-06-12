@@ -138,7 +138,7 @@ router.post("/create", authMiddleware, roleMiddleware(["admin", "chef"]), generi
  *       401:
  *         description: Non autorisé
  */
-router.get("/", authMiddleware, roleMiddleware(["admin", "chef", "user"]), genericController.getItems(Company));
+router.get("/", genericController.getAllCompaniesWithoutEmail(Company));
 
 /**
  * @swagger
@@ -171,7 +171,7 @@ router.get("/", authMiddleware, roleMiddleware(["admin", "chef", "user"]), gener
  *       404:
  *         description: Entreprise non trouvée
  */
-router.put("/:id", authMiddleware, roleMiddleware(["admin"]), genericController.updateItem(Company));
+router.put("/:id", authMiddleware, roleMiddleware(["admin", "chef"]), genericController.updateItem(Company));
 
 /**
  * @swagger
@@ -198,7 +198,7 @@ router.put("/:id", authMiddleware, roleMiddleware(["admin"]), genericController.
  *       404:
  *         description: Entreprise non trouvée
  */
-router.delete("/:id", authMiddleware, roleMiddleware(["admin"]), genericController.deleteItem(Company));
+router.delete("/:id", authMiddleware, roleMiddleware(["admin", "chef"]), genericController.deleteItem(Company));
 
 module.exports = router;
 

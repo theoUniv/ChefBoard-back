@@ -53,3 +53,13 @@ exports.updateCompanyScore = async function (companyId) {
 
     await Company.findByIdAndUpdate(companyId, { score: average });
 };
+
+exports.getAllCompaniesWithoutEmail = async (req, res) => {
+    try {
+        const companies = await Company.find({}, { email: 0 }); 
+        res.status(200).json(companies);
+    } catch (err) {
+        console.error('Erreur en récupérant les companies:', err);
+        res.status(500).json({ message: 'Erreur serveur', error: err.message });
+    }
+};

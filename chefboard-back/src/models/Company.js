@@ -22,7 +22,7 @@ const companySchema = new mongoose.Schema({
         default: null,
     },
     logo: { type: mongoose.Schema.Types.ObjectId, ref: 'Picture' },
-    presentation_picture: [{ type: String }],
+    presentation_picture: { type: mongoose.Schema.Types.ObjectId, ref: 'Picture' },
     id_owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     categories: {
         type: String,

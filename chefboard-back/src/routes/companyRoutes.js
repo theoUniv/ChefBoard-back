@@ -143,7 +143,7 @@ router.post("/create", authMiddleware, roleMiddleware(["admin", "chef"]), generi
 router.get("/", async (req, res) => {
     try {
         // Récupérer toutes les entreprises et peupler l'objet logo, sans l'email
-        const companies = await Company.find().select("-email").populate("logo");
+        const companies = await Company.find().select("-email").populate("logo").populate("presentation_picture");
         res.json(companies);
     } catch (err) {
         console.error(err);
@@ -245,7 +245,7 @@ router.delete("/:id", authMiddleware, roleMiddleware(["admin", "chef"]), generic
  */
 router.get("/:id/with-picture", authMiddleware, async (req, res) => {
     try {
-        const company = await Company.findById(req.params.id).populate("logo");
+        const company = await Company.findById(req.params.id).populate("logo").populate("presentation_picture");
         if (!company) {
             return res.status(404).json({ error: "Entreprise non trouvée" });
         }

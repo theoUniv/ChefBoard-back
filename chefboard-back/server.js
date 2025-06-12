@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-
+const path = require("path");
 const authRoutes = require("./src/routes/authRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const reviewRoutes = require("./src/routes/reviewRoutes");
@@ -31,7 +31,7 @@ app.use("/api/posts", authController.verifyToken, postRoutes);
 app.use("/api/answers", authController.verifyToken, answerRoutes);
 app.use("/api/companies", companyRoutes);
 app.use("/api/pictures", authController.verifyToken, pictureRoutes);
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 setupSwagger(app);
 

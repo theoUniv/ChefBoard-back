@@ -138,7 +138,7 @@ router.post("/create", authMiddleware, roleMiddleware(["admin", "chef"]), generi
  *       401:
  *         description: Non autorisé
  */
-router.get("/", genericController.getAllCompaniesWithoutEmail(Company));
+router.get("/", companyController.getAllCompaniesWithoutEmail);
 
 /**
  * @swagger

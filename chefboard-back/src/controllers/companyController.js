@@ -2,6 +2,7 @@ const Company = require('../models/Company');
 const Review = require('../models/Review');
 const mongoose = require('mongoose');
 
+
 exports.getCompaniesNearby = async (req, res) => {
     const { latitude, longitude, radius } = req.query;
 
@@ -23,17 +24,21 @@ exports.getCompaniesNearby = async (req, res) => {
                 $geoWithin: {
                     $centerSphere: [
                         [lonNum, latNum],
-                        radiusInMeters / 6378137 // rayon en radians (6378137 = rayon terre en m)
+                        radiusInMeters / 6378137 // rayon terrestre en radians
                     ]
                 }
             }
-        });
+        })
+            .populate('logo')
+            .populate('presentation_picture');
 
         res.json(companies);
     } catch (err) {
+        console.error('Erreur dans getCompaniesNearby:', err);
         res.status(500).json({ message: 'Erreur serveur', error: err.message });
     }
 };
+
 
 exports.updateCompanyScore = async function (companyId) {
     if (!companyId) return;

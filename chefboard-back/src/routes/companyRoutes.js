@@ -119,16 +119,16 @@ router.post("/create", authMiddleware, roleMiddleware(["admin", "chef"]), generi
 
 /**
  * @swagger
- * /companies:
+ * /companies/with-picture:
  *   get:
- *     summary: Récupérer toutes les entreprises
+ *     summary: Récupérer toutes les entreprises avec leur logo peuplé (sans email)
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - Companies
  *     responses:
  *       200:
- *         description: Liste des entreprises
+ *         description: Liste des entreprises avec logo (sans email)
  *         content:
  *           application/json:
  *             schema:
@@ -137,8 +137,21 @@ router.post("/create", authMiddleware, roleMiddleware(["admin", "chef"]), generi
  *                 $ref: '#/components/schemas/Company'
  *       401:
  *         description: Non autorisé
+ *       500:
+ *         description: Erreur serveur
  */
-router.get("/", companyController.getAllCompaniesWithoutEmail);
+router.get("/", authMiddleware, async (req, res) => {
+    try {
+        // Récupérer toutes les entreprises et peupler l'objet logo, sans l'email
+        const companies = await Company.find().select("-email").populate("logo");
+        res.json(companies);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+
 
 /**
  * @swagger

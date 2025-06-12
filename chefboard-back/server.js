@@ -31,6 +31,7 @@ app.use("/api/posts", authController.verifyToken, postRoutes);
 app.use("/api/answers", authController.verifyToken, answerRoutes);
 app.use("/api/companies", companyRoutes);
 app.use("/api/pictures", authController.verifyToken, pictureRoutes);
+app.use('/uploads', express.static('uploads'));
 
 setupSwagger(app);
 

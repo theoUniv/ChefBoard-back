@@ -200,5 +200,47 @@ router.put("/:id", authMiddleware, roleMiddleware(["admin", "chef"]), genericCon
  */
 router.delete("/:id", authMiddleware, roleMiddleware(["admin", "chef"]), genericController.deleteItem(Company));
 
-module.exports = router;
+/**
+ * @swagger
+ * /companies/{id}/with-picture:
+ *   get:
+ *     summary: Récupérer une entreprise avec l'objet Picture (logo) peuplé
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Companies
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de l'entreprise
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Entreprise avec logo peuplé
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Company'
+ *       404:
+ *         description: Entreprise non trouvée
+ *       401:
+ *         description: Non autorisé
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get("/:id/with-picture", authMiddleware, async (req, res) => {
+    try {
+        const company = await Company.findById(req.params.id).populate("logo");
+        if (!company) {
+            return res.status(404).json({ error: "Entreprise non trouvée" });
+        }
+        res.json(company);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
 
+module.exports = router;

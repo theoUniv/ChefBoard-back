@@ -288,4 +288,44 @@ router.get("/:id/with-picture", authMiddleware, async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /companies/mine:
+ *   get:
+ *     summary: Récupérer les entreprises de l'utilisateur connecté (ou toutes si admin)
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Companies
+ *     responses:
+ *       200:
+ *         description: Liste des entreprises
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Company'
+ *       401:
+ *         description: Non autorisé
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get("/mine", authMiddleware, async (req, res) => {
+    try {
+        const user = req.user; // Injecté par authMiddleware
+        const query = user.role === "admin" ? {} : { owner: user.id };
+
+        const companies = await Company.find(query)
+            .populate("logo")
+            .populate("presentation_picture");
+
+        res.status(200).json(companies);
+    } catch (err) {
+        console.error("Erreur récupération companies:", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+
 module.exports = router;

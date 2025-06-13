@@ -313,16 +313,24 @@ router.get("/:id/with-picture", authMiddleware, async (req, res) => {
  */
 router.get("/mine", authMiddleware, async (req, res) => {
     try {
-        const user = req.user; // Injecté par authMiddleware
-        const query = user.role === "admin" ? {} : { owner: user.id };
+        const user = req.user;
 
-        const companies = await Company.find(query)
-            .populate("logo")
-            .populate("presentation_picture");
+        let companies;
+        if (user.role === "admin") {
+            // Admin = récupère toutes les entreprises
+            companies = await Company.find()
+                .populate("logo")
+                .populate("presentation_picture");
+        } else {
+            // Sinon, récupère uniquement celles dont il est le owner
+            companies = await Company.find({ owner: user.id })
+                .populate("logo")
+                .populate("presentation_picture");
+        }
 
         res.status(200).json(companies);
     } catch (err) {
-        console.error("Erreur récupération companies:", err);
+        console.error("Erreur récupération des companies:", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });

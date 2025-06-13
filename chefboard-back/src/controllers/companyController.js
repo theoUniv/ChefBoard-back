@@ -2,6 +2,33 @@ const Company = require('../models/Company');
 const Review = require('../models/Review');
 const mongoose = require('mongoose');
 
+exports.getCompanyDetails = async (req, res) => {
+    const companyId = req.params.id;
+
+    try {
+        const company = await Company.findById(companyId)
+            .populate('logo')
+            .populate('presentation_picture');
+
+        if (!company) {
+            return res.status(404).json({ message: 'Entreprise non trouvée' });
+        }
+
+        const posts = await Post.find({ id_company: companyId }).populate('id_picture');
+        const reviews = await Review.find({ id_company: companyId })
+            .populate('id_user')
+            .populate('answers');
+
+        res.status(200).json({
+            company,
+            posts,
+            reviews
+        });
+    } catch (err) {
+        console.error("Erreur dans getCompanyDetails:", err);
+        res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
+};
 
 exports.getCompaniesNearby = async (req, res) => {
     const { latitude, longitude, radius } = req.query;

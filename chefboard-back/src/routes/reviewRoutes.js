@@ -169,4 +169,36 @@ router.delete("/:id", authMiddleware, genericController.deleteItem(Review));
 router.get("/user/:userId", authMiddleware, reviewController.getReviewsByUser);
 
 
+/**
+ * @swagger
+ * /reviews/mine:
+ *   get:
+ *     summary: Récupérer les avis de l'utilisateur connecté (ou tous si admin)
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Reviews
+ *     responses:
+ *       200:
+ *         description: Liste des reviews
+ *       401:
+ *         description: Non autorisé
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get("/reviews/mine", authMiddleware, async (req, res) => {
+    try {
+        const user = req.user;
+        const query = user.role === "admin" ? {} : { user: user.id };
+
+        const reviews = await Review.find(query).populate("company");
+
+        res.status(200).json(reviews);
+    } catch (err) {
+        console.error("Erreur récupération reviews:", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+
 module.exports = router;

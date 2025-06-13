@@ -151,6 +151,38 @@ router.get("/", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /companies/{id}/details:
+ *   get:
+ *     summary: Récupérer les détails complets d'une entreprise
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Companies
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de l'entreprise
+ *         schema:
+ *           type: string
+ *           format: ObjectId
+ *     responses:
+ *       200:
+ *         description: Détails de l'entreprise récupérés avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Company'
+ *       401:
+ *         description: Non autorisé
+ *       404:
+ *         description: Entreprise non trouvée
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get('/:id/details', companyController.getCompanyDetails);
 
 
 /**

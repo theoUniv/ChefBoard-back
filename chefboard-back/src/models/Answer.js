@@ -6,4 +6,3 @@ const Answer = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Answer', Answer);
-    

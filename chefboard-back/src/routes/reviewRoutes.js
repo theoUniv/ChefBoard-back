@@ -3,6 +3,7 @@ const router = express.Router();
 const Review = require("../models/Review");
 const genericController = require("../controllers/genericController");
 const authMiddleware = require("../middleware/authmiddleware");
+const reviewController = require("../controllers/reviewController");
 
 /**
  * @swagger
@@ -131,5 +132,41 @@ router.put("/:id", authMiddleware, genericController.updateItem(Review));
  *         description: Review non trouvée
  */
 router.delete("/:id", authMiddleware, genericController.deleteItem(Review));
+
+/**
+ * @swagger
+ * /reviews/user/{userId}:
+ *   get:
+ *     summary: Récupérer toutes les reviews d’un utilisateur donné
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Reviews
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: ID de l’utilisateur dont on veut récupérer les reviews
+ *         schema:
+ *           type: string
+ *           format: ObjectId
+ *     responses:
+ *       200:
+ *         description: Liste des reviews de l’utilisateur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Review'
+ *       401:
+ *         description: Non autorisé
+ *       404:
+ *         description: Aucune review trouvée pour cet utilisateur
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get("/user/:userId", authMiddleware, reviewController.getReviewsByUser);
+
 
 module.exports = router;

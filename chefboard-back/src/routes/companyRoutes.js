@@ -323,7 +323,7 @@ router.get("/mine", authMiddleware, async (req, res) => {
                 .populate("presentation_picture");
         } else {
             // Sinon, récupère uniquement celles dont il est le owner
-            companies = await Company.find({ owner: user.id })
+            companies = await Company.find({ id_owner: user.id })
                 .populate("logo")
                 .populate("presentation_picture");
         }

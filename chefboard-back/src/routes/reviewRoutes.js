@@ -186,19 +186,21 @@ router.get("/user/:userId", authMiddleware, reviewController.getReviewsByUser);
  *       500:
  *         description: Erreur serveur
  */
-router.get("/reviews/mine", authMiddleware, async (req, res) => {
+router.get("/mine", authMiddleware, async (req, res) => {
     try {
         const user = req.user;
-        const query = user.role === "admin" ? {} : { user: user.id };
 
-        const reviews = await Review.find(query).populate("company");
+        const reviews = user.role === "admin"
+            ? await Review.find()
+            : await Review.find({ id_user: user.id });
 
         res.status(200).json(reviews);
     } catch (err) {
-        console.error("Erreur récupération reviews:", err);
+        console.error("Erreur récupération des reviews:", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
+
 
 
 module.exports = router;

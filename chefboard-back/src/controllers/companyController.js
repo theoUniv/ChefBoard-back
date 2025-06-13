@@ -16,9 +16,13 @@ exports.getCompanyDetails = async (req, res) => {
         }
 
         const posts = await Post.find({ id_company: companyId }).populate('id_picture');
+
         const reviews = await Review.find({ id_company: companyId })
             .populate('id_user')
-            .populate('answers');
+            .populate({
+                path: 'answers',
+                populate: { path: 'id_user' }
+            });
 
         res.status(200).json({
             company,
@@ -30,6 +34,7 @@ exports.getCompanyDetails = async (req, res) => {
         res.status(500).json({ message: "Erreur serveur", error: err.message });
     }
 };
+
 
 exports.getCompaniesNearby = async (req, res) => {
     const { latitude, longitude, radius } = req.query;

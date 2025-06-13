@@ -1,6 +1,7 @@
 const Company = require('../models/Company');
 const Review = require('../models/Review');
 const mongoose = require('mongoose');
+const Post = require('../models/Post');
 
 exports.getCompanyDetails = async (req, res) => {
     const companyId = req.params.id;

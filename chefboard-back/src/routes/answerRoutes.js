@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Answer = require("../models/Answer");
 const genericController = require("../controllers/genericController");
+const answerController = require("../controllers/answerController");
 const authMiddleware = require("../middleware/authmiddleware");
 
 /**
@@ -41,7 +42,7 @@ const authMiddleware = require("../middleware/authmiddleware");
  *       401:
  *         description: Non autorisé
  */
-router.post("/create", authMiddleware, genericController.createItem(Answer));
+router.post("/create", authMiddleware, answerController.createAnswer);
 
 /**
  * @swagger

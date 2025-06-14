@@ -201,6 +201,28 @@ router.get("/mine", authMiddleware, async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /reviews/my-restaurants:
+ *   get:
+ *     summary: Récupérer les reviews des restaurants que je possède
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Reviews
+ *     responses:
+ *       200:
+ *         description: Reviews récupérées avec succès
+ *       401:
+ *         description: Non autorisé
+ *       404:
+ *         description: Aucune entreprise trouvée
+ *       500:
+ *         description: Erreur serveur
+ */
+
+router.get("/my-restaurants", authMiddleware, reviewController.getReviewsForMyRestaurants);
+
 
 
 module.exports = router;

@@ -63,3 +63,33 @@ exports.getReviewsForMyRestaurants = async (req, res) => {
 };
 
 
+exports.updateReviewIfOwner = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const reviewId = req.params.id;
+        const updateData = req.body;
+
+        // 1. Récupérer la review
+        const review = await Review.findById(reviewId);
+        if (!review) return res.status(404).json({ message: "Review non trouvée" });
+
+        // 2. Récupérer la company liée
+        const company = await Company.findById(review.id_company);
+        if (!company) return res.status(404).json({ message: "Company liée introuvable" });
+
+        // 3. Check si t'es le putain de propriétaire
+        if (company.id_owner.toString() !== userId) {
+            return res.status(403).json({ message: "T'as pas les droits pour modifier cette review" });
+        }
+
+        // 4. Modifier la review
+        review.set(updateData);
+        review.updated_at = new Date();
+        await review.save();
+
+        res.status(200).json({ message: "Review modifiée", review });
+    } catch (error) {
+        console.error("Erreur updateReviewIfOwner:", error);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+  };

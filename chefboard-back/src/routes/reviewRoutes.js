@@ -223,6 +223,53 @@ router.get("/mine", authMiddleware, async (req, res) => {
 
 router.get("/my-restaurants", authMiddleware, reviewController.getReviewsForMyRestaurants);
 
+/**
+ * @swagger
+ * /reviews/{id}:
+ *   put:
+ *     summary: Modifier une review par ID (uniquement si l'on possèdes la société liée)
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Reviews
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la review à modifier
+ *         schema:
+ *           type: string
+ *           format: ObjectId
+ *     requestBody:
+ *       description: Données à modifier dans la review
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Review'
+ *     responses:
+ *       200:
+ *         description: Review modifiée avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Review modifiée
+ *                 review:
+ *                   $ref: '#/components/schemas/Review'
+ *       401:
+ *         description: Non autorisé (token invalide ou absent)
+ *       403:
+ *         description: Accès refusé, tu n’es pas propriétaire de la société liée
+ *       404:
+ *         description: Review ou société liée non trouvée
+ *       500:
+ *         description: Erreur serveur
+ */
+router.put('/:id', authMiddleware, reviewController.updateReviewIfOwner);
 
 
 module.exports = router;

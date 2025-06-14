@@ -48,7 +48,7 @@ const reviewController = require("../controllers/reviewController");
  *       401:
  *         description: Non autorisé
  */
-router.post("/create", authMiddleware, genericController.createItem(Review));
+router.post("/create", authMiddleware, reviewController.createReview);
 
 /**
  * @swagger

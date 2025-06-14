@@ -13,7 +13,7 @@ const ReviewSchema = new mongoose.Schema({
 });
 
 ReviewSchema.post('save', async function () {
-    const { updateCompanyScore } = require('../controllers/companyController');
+    const { updateCompanyScore } = require('../controllers/companyController');w
     await updateCompanyScore(this.id_company);
 });
 
@@ -21,5 +21,13 @@ ReviewSchema.post('remove', async function () {
     const { updateCompanyScore } = require('../controllers/companyController');
     await updateCompanyScore(this.id_company);
 });
+
+ReviewSchema.post('findOneAndUpdate', async function (doc) {
+    if (doc) {
+        const { updateCompanyScore } = require('../controllers/companyController');
+        await updateCompanyScore(doc.id_company);
+    }
+});
+
 
 module.exports = mongoose.model('Review', ReviewSchema);

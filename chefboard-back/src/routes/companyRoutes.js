@@ -114,8 +114,7 @@ router.get('/nearby', companyController.getCompaniesNearby);
  *       401:
  *         description: Non autorisé
  */
-router.post("/create", authMiddleware, roleMiddleware(["admin", "chef"]), genericController.createItem(Company));
-
+router.post("/create", authMiddleware, companyController.createCompany);
 
 /**
  * @swagger

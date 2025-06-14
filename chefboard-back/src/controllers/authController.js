@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 // # Générer un token JWT #
-const generateToken = (user) => {
+exports.generateToken = (user) => {
     return jwt.sign({ id: user._id, email: user.email, role: user.role, first_name: user.first_name, last_name: user.last_name, favorite_categories: user.favorite_categories, created_at: user.created_at }, process.env.JWT_SECRET, {
         expiresIn: '24h'
     });

@@ -2,6 +2,8 @@ const Company = require('../models/Company');
 const Review = require('../models/Review');
 const mongoose = require('mongoose');
 const Post = require('../models/Post');
+const User = require("../models/User"); 
+const { generateToken } = require("./authController");
 
 exports.getCompanyDetails = async (req, res) => {
     const companyId = req.params.id;
@@ -99,5 +101,37 @@ exports.getAllCompaniesWithoutEmail = async (req, res) => {
     } catch (err) {
         console.error('Erreur en récupérant les companies:', err);
         res.status(500).json({ message: 'Erreur serveur', error: err.message });
+    }
+};
+
+
+
+exports.createCompany = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const company = new Company({
+            ...req.body,
+            id_owner: userId,
+        });
+
+        const savedCompany = await company.save();
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { role: "chef" },
+            { new: true }
+        );
+
+        const newToken = generateToken(updatedUser);
+
+        res.status(201).json({
+            message: "Entreprise créée et rôle mis à jour",
+            company: savedCompany,
+            token: newToken,
+        });
+    } catch (err) {
+        console.error("Erreur de merde pendant la création de la company:", err);
+        res.status(500).json({ error: "Erreur serveur" });
     }
 };

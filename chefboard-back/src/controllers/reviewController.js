@@ -21,3 +21,15 @@ exports.getReviewsByUser = async (req, res) => {
         res.status(500).json({ message: "Erreur serveur", error: err.message });
     }
 };
+
+
+exports.createReview = async (req, res) => {
+    try {
+        const reviewData = { ...req.body, id_user: req.user.id }; // injecte l'id du user depuis le token
+        const review = new Review(reviewData);
+        await review.save();
+        res.status(201).json(review);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+  };

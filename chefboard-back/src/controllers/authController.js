@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
     try {
         const user = new User(req.body);
         await user.save();
-        res.status(201).json({ message: "Utilisateur créé", token: generateToken(user) });
+        res.status(201).json({ message: "Utilisateur créé", token: exports.generateToken(user) });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -29,7 +29,7 @@ exports.login = async (req, res) => {
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({ error: "Email ou mot de passe incorrect" });
         }
-        res.status(200).json({ message: "Connexion réussie", token: generateToken(user) });
+        res.status(200).json({ message: "Connexion réussie", token: exports.generateToken(user) });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

@@ -269,7 +269,7 @@ router.get("/my-restaurants", authMiddleware, reviewController.getReviewsForMyRe
  *       500:
  *         description: Erreur serveur
  */
-router.put('update-my-review/:id', authMiddleware, reviewController.updateReviewIfOwner);
+router.put('/update-my-review/:id', authMiddleware, reviewController.updateReviewIfOwner);
 
 
 module.exports = router;

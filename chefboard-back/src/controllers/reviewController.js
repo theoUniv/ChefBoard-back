@@ -1,4 +1,5 @@
 const Review = require('../models/Review');
+const Company = require('../models/Company');
 
 exports.getReviewsByUser = async (req, res) => {
     const userId = req.params.userId;

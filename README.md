@@ -5,11 +5,7 @@ ChefBoard-back est une API RESTful développée en Node.js avec Express, servant
 
 ## 🚀 Fonctionnalités
 
-- **Authentification JWT** : Inscription, connexion et gestion des sessions utilisateur.
-- **Gestion des restaurants** : Ajout, modification, suppression et consultation des restaurants.
-- **Gestion des avis** : Publication, modification et suppression des avis des utilisateurs.
-- **Catégorisation** : Attribution de catégories aux restaurants pour faciliter la recherche.
-- **Filtrage dynamique** : Recherche de restaurants par catégorie, localisation, et autres critères.
+- L'ensemble des fonctionnalitées / endpoints de l'API sont disponibles sur: http://37.59.111.172:3000/api-docs/#/
 
 ## 🛠️ Prérequis
 

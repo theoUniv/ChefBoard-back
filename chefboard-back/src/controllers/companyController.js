@@ -74,13 +74,16 @@ exports.getCompaniesNearby = async (req, res) => {
     }
 };
 
-
 exports.updateCompanyScore = async function (companyId) {
     if (!companyId) return;
-    console.log(typeof Review.aggregate); // Ça doit afficher "function"
 
     const result = await Review.aggregate([
-        { $match: { id_company: new mongoose.Types.ObjectId(companyId) } },
+        {
+            $match: {
+                id_company: new mongoose.Types.ObjectId(companyId),
+                state: 1
+            }
+        },
         {
             $group: {
                 _id: '$id_company',
@@ -93,6 +96,7 @@ exports.updateCompanyScore = async function (companyId) {
 
     await Company.findByIdAndUpdate(companyId, { score: average });
 };
+
 
 exports.getAllCompaniesWithoutEmail = async (req, res) => {
     try {
